@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILS College Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF69B4',
+                        secondary: '#FFB6C1',
+                        glass: 'rgba(255, 255, 255, 0.25)',
+                        darkglass: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="relative overflow-x-hidden">
+   
+    
+
+     <div id="students" class="tab-content"></div>
+        
+    
+        <div class="bubble-1"></div>
+        <div class="bubble-2"></div>
+        <div class="bubble-3"></div>
+
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold bg-gradient-to-r from-primary to-darkpink bg-clip-text text-transparent">
+                    Class Management Hub
+                </h2>
+                <p class="text-gray-500">Manage all your classes in one place</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 mt-4 lg:mt-0 w-full lg:w-auto">
+                <div class="relative flex-1 sm:flex-none sm:w-64">
+                    <input type="text" placeholder="Search classes..." class="search-input w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none">
+                </div>
+                <button onclick="openModal('addClassModal')" class="btn-hover-effect bg-gradient-to-r from-primary to-darkpink text-white px-5 py-2 rounded-full flex items-center justify-center whitespace-nowrap">
+                    <i class="fas fa-plus mr-2"></i> Add New Class
+                </button>
+                <button onclick="openModal('bulkActionsModal')" class="btn-hover-effect bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-full flex items-center justify-center whitespace-nowrap">
+                    <i class="fas fa-ellipsis-v mr-2"></i> Bulk Actions
+                </button>
+            </div>
+        </div>
+
+        <div class="tab-selector flex space-x-6 border-b border-gray-200 mb-6">
+            <button class="active text-primary font-medium">All Classes (6)</button>
+            <button class="text-gray-500 hover:text-primary transition">Ongoing (4)</button>
+            <button class="text-gray-500 hover:text-primary transition">Completed (1)</button>
+            <button class="text-gray-500 hover:text-primary transition">Upcoming (1)</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Class Card 1 -->
+            <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gradient-to-r from-primary to-pink-300 opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-xl text-gray-800">Advanced Grammar 101</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openModal('classActionsModal')" class="text-gray-400 hover:text-primary transition">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Active</span>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-darkpink flex items-center justify-center text-white mr-3">
+                        <i class="fas fa-user-tie text-sm"></i>
+                    </div>
+                    <p class="text-gray-600">Prof. Williams</p>
+                </div>
+                <div class="flex justify-between text-sm mb-4">
+                    <div>
+                        <p class="text-gray-500">Schedule</p>
+                        <p class="font-medium text-gray-700">Mon, Wed, Fri</p>
+                        <p class="text-gray-600">9:00 AM - 10:30 AM</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500">Room</p>
+                        <p class="font-medium text-gray-700">A-304</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-500">Students: <span class="font-medium text-gray-700">24/30</span></span>
+                        <span class="text-primary font-medium">80%</span>
+                    </div>
+                    <div class="student-progress">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex -space-x-2">
+                        <div class="student-avatar">JW</div>
+                        <div class="student-avatar">MR</div>
+                        <div class="student-avatar">KP</div>
+                        <div class="student-avatar bg-gray-200 text-gray-600">+21</div>
+                    </div>
+                    <button onclick="openModal('classDetailsModal')" class="btn-hover-effect bg-gradient-to-r from-white to-white text-primary px-4 py-1.5 rounded-full text-sm font-medium flex items-center group">
+                        View Details <i class="fas fa-chevron-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Class Card 2 -->
+            <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gradient-to-r from-primary to-pink-300 opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-xl text-gray-800">Business English</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openModal('classActionsModal')" class="text-gray-400 hover:text-primary transition">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Upcoming</span>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-darkpink flex items-center justify-center text-white mr-3">
+                        <i class="fas fa-user-tie text-sm"></i>
+                    </div>
+                    <p class="text-gray-600">Prof. Anderson</p>
+                </div>
+                <div class="flex justify-between text-sm mb-4">
+                    <div>
+                        <p class="text-gray-500">Schedule</p>
+                        <p class="font-medium text-gray-700">Tue, Thu</p>
+                        <p class="text-gray-600">6:00 PM - 8:00 PM</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500">Room</p>
+                        <p class="font-medium text-gray-700">B-102</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-500">Students: <span class="font-medium text-gray-700">18/25</span></span>
+                        <span class="text-primary font-medium">72%</span>
+                    </div>
+                    <div class="student-progress">
+                        <div class="progress-fill" style="width: 72%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex -space-x-2">
+                        <div class="student-avatar">SD</div>
+                        <div class="student-avatar">TM</div>
+                        <div class="student-avatar">LK</div>
+                        <div class="student-avatar bg-gray-200 text-gray-600">+15</div>
+                    </div>
+                    <button onclick="openModal('classDetailsModal')" class="btn-hover-effect bg-gradient-to-r from-white to-white text-primary px-4 py-1.5 rounded-full text-sm font-medium flex items-center group">
+                        View Details <i class="fas fa-chevron-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Class Card 3 -->
+            <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gradient-to-r from-primary to-pink-300 opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-xl text-gray-800">Conversation Practice</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openModal('classActionsModal')" class="text-gray-400 hover:text-primary transition">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Active</span>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-darkpink flex items-center justify-center text-white mr-3">
+                        <i class="fas fa-user-tie text-sm"></i>
+                    </div>
+                    <p class="text-gray-600">Prof. Clark</p>
+                </div>
+                <div class="flex justify-between text-sm mb-4">
+                    <div>
+                        <p class="text-gray-500">Schedule</p>
+                        <p class="font-medium text-gray-700">Saturday</p>
+                        <p class="text-gray-600">10:00 AM - 1:00 PM</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500">Room</p>
+                        <p class="font-medium text-gray-700">C-205</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-500">Students: <span class="font-medium text-gray-700">12/20</span></span>
+                        <span class="text-primary font-medium">60%</span>
+                    </div>
+                    <div class="student-progress">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex -space-x-2">
+                        <div class="student-avatar">AB</div>
+                        <div class="student-avatar">CD</div>
+                        <div class="student-avatar">EF</div>
+                        <div class="student-avatar bg-gray-200 text-gray-600">+9</div>
+                    </div>
+                    <button onclick="openModal('classDetailsModal')" class="btn-hover-effect bg-gradient-to-r from-white to-white text-primary px-4 py-1.5 rounded-full text-sm font-medium flex items-center group">
+                        View Details <i class="fas fa-chevron-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Class Card 4 -->
+            <div class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gradient-to-r from-primary to-pink-300 opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-xl text-gray-800">IELTS Preparation</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openModal('classActionsModal')" class="text-gray-400 hover:text-primary transition">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Full</span>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-darkpink flex items-center justify-center text-white mr-3">
+                        <i class="fas fa-user-tie text-sm"></i>
+                    </div>
+                    <p class="text-gray-600">Prof. Garcia</p>
+                </div>
+                <div class="flex justify-between text-sm mb-4">
+                    <div>
+                        <p class="text-gray-500">Schedule</p>
+                        <p class="font-medium text-gray-700">Mon, Wed, Fri</p>
+                        <p class="text-gray-600">3:00 PM - 5:00 PM</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500">Room</p>
+                        <p class="font-medium text-gray-700">A-407</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-500">Students: <span class="font-medium text-gray-700">15/15</span></span>
+                        <span class="text-primary font-medium">100%</span>
+                    </div>
+                    <div class="student-progress">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex -space-x-2">
+                        <div class="student-avatar">GH</div>
+                        <div class="student-avatar">IJ</div>
+                        <div class="student-avatar">KL</div>
+                        <div class="student-avatar bg-gray-200 text-gray-600">+12</div>
+                    </div>
+                    <button onclick="openModal('classDetailsModal')" class="btn-hover-effect bg-gradient-to-r from-white to-white text-primary px-4 py-1.5 rounded-full text-sm font-medium flex items-center group">
+                        View Details <i class="fas fa-chevron-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Class Card 5 -->
+            <div class="glass-card p-6 rounded-2xl hover:shadow-xl transitionall duration-300 relative overflow-hidden group">
+                <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gradient-to-r from-primary to-pink-300 opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-xl text-gray-800">Creative Writing</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openModal('classActionsModal')" class="text-gray-400 hover:text-primary transition">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Completed</span>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-darkpink flex items-center justify-center text-white mr-3">
+                        <i class="fas fa-user-tie text-sm"></i>
+                    </div>
+                    <p class="text-gray-600">Prof. Carter</p>
+                </div>
+                <div class="flex justify-between text-sm mb-4">
+                    <div>
+                        <p class="text-gray-500">Schedule</p>
+                        <p class="font-medium text-gray-700">Tue, Thu</p>
+                        <p class="text-gray-600">10:00 AM - 12:00 PM</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500">Room</p>
+                        <p class="font-medium text-gray-700">B-301</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-500">Students: <span class="font-medium text-gray-700">8/15</span></span>
+                        <span class="text-primary font-medium">53%</span>
+                    </div>
+                    <div class="student-progress">
+                        <div class="progress-fill" style="width: 53%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex -space-x-2">
+                        <div class="student-avatar">MN</div>
+                        <div class="student-avatar">OP</div>
+                        <div class="student-avatar">QR</div>
+                        <div class="student-avatar bg-gray-200 text-gray-600">+5</div>
+                    </div>
+                    <button onclick="openModal('classDetailsModal')" class="btn-hover-effect bg-gradient-to-r from-white to-white text-primary px-4 py-1.5 rounded-full text-sm font-medium flex items-center group">
+                        View Details <i class="fas fa-chevron-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add New Class Card -->
+            <div onclick="openModal('addClassModal')" class="border-2 border-dashed border-primary rounded-2xl flex flex-col items-center justify-center p-8 transition-all duration-300 hover:bg-pink-50 hover:shadow-lg cursor-pointer group">
+                <div class="w-16 h-16 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mb-4 group-hover:bg-opacity-30 transition-all duration-300">
+                    <i class="fas fa-plus text-primary text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg text-primary group-hover:text-darkpink transition-colors">Create New Class</h3>
+                <p class="text-sm text-gray-500 mt-2 text-center">Set up a new class with schedule, teacher assignment and student enrollment</p>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-between items-center mt-8">
+            <div class="text-sm text-gray-500">
+                Showing <span class="font-medium text-gray-700">1</span> to <span class="font-medium text-gray-700">6</span> of <span class="font-medium text-gray-700">6</span> classes
+            </div>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="px-3 py-1 rounded-md bg-gradient-to-r from-primary to-darkpink text-white">1</button>
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">2</button>
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">3</button>
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div id="addClassModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal-blur">
+        <div class="bg-white rounded-2xl overflow-hidden w-full max-w-2xl transform transition-all">
+            <div class="relative">
+                <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Create New Class</h3>
+                        <button onclick="closeModal('addClassModal')" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="addClassForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="className" class="block text-sm font-medium text-gray-700 mb-1">Class Name</label>
+                                <input type="text" id="className" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label for="teacher" class="block text-sm font-medium text-gray-700 mb-1">Teacher</label>
+                                <select id="teacher" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                    <option value="">Select Teacher</option>
+                                    <option value="prof-williams">Prof. Williams</option>
+                                    <option value="prof-anderson">Prof. Anderson</option>
+                                    <option value="prof-clark">Prof. Clark</option>
+                                    <option value="prof-garcia">Prof. Garcia</option>
+                                    <option value="prof-carter">Prof. Carter</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="room" class="block text-sm font-medium text-gray-700 mb-1">Room</label>
+                                <input type="text" id="room" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label for="capacity" class="block text-sm font-medium text-gray-700 mb-1">Capacity</label>
+                                <input type="number" id="capacity" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Schedule</label>
+                            <div class="schedule-table border rounded-lg overflow-hidden">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-sm font-medium">Day</th>
+                                            <th class="text-sm font-medium">Start Time</th>
+                                            <th class="text-sm font-medium">End Time</th>
+                                            <th class="text-sm font-medium"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scheduleRows">
+                                        <tr>
+                                            <td>
+                                                <select class="w-full px-2 py-1 border-none focus:ring-0">
+                                                    <option>Monday</option>
+                                                    <option>Tuesday</option>
+                                                    <option>Wednesday</option>
+                                                    <option>Thursday</option>
+                                                    <option>Friday</option>
+                                                    <option>Saturday</option>
+                                                    <option>Sunday</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="time" class="w-full px-2 py-1 border-none focus:ring-0" value="09:00"></td>
+                                            <td><input type="time" class="w-full px-2 py-1 border-none focus:ring-0" value="10:30"></td>
+                                            <td class="text-center">
+                                                <button type="button" onclick="removeScheduleRow(this)" class="text-red-400 hover:text-red-600">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="p-2 border-t">
+                                    <button type="button" onclick="addScheduleRow()" class="text-primary hover:text-darkpink text-sm font-medium flex items-center">
+                                        <i class="fas fa-plus-circle mr-1"></i> Add Schedule
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeModal('addClassModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-primary to-darkpink text-white rounded-lg hover:opacity-90">
+                                Create Class
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Details Modal -->
+    <div id="classDetailsModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal-blur">
+        <div class="bg-white rounded-2xl overflow-hidden w-full max-w-4xl transform transition-all">
+            <div class="relative">
+                <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Advanced Grammar 101 - Class Details</h3>
+                        <button onclick="closeModal('classDetailsModal')" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="md:w-1/3">
+                            <div class="glass-card p-5 rounded-xl mb-4">
+                                <h4 class="font-bold text-lg mb-3">Class Overview</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Teacher</p>
+                                        <p class="font-medium">Prof. Williams</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Room</p>
+                                        <p class="font-medium">A-304</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Status</p>
+                                        <p class="font-medium text-green-600">Active</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Enrollment</p>
+                                        <div class="flex items-center">
+                                            <span class="font-medium mr-2">24/30</span>
+                                            <span class="text-primary">(80%)</span>
+                                        </div>
+                                        <div class="student-progress mt-1">
+                                            <div class="progress-fill" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="glass-card p-5 rounded-xl">
+                                <h4 class="font-bold text-lg mb-3">Schedule</h4>
+                                <div>
+                                    <div class="flex items-center py-2">
+                                        <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mr-3">
+                                            <i class="fas fa-calendar-day text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Monday</p>
+                                            <p class="text-sm text-gray-500">9:00 AM - 10:30 AM</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center py-2">
+                                        <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mr-3">
+                                            <i class="fas fa-calendar-day text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Wednesday</p>
+                                            <p class="text-sm text-gray-500">9:00 AM - 10:30 AM</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center py-2">
+                                        <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mr-3">
+                                            <i class="fas fa-calendar-day text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Friday</p>
+                                            <p class="text-sm text-gray-500">9:00 AM - 10:30 AM</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-2/3">
+                            <div class="glass-card p-5 rounded-xl mb-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-bold text-lg">Students (24)</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">
+                                            Export List
+                                        </button>
+                                        <button onclick="openModal('addStudentsModal')" class="bg-gradient-to-r from-primary to-darkpink text-white px-3 py-1 rounded-full text-sm">
+                                            Add Students
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="relative">
+                                    <input type="text" placeholder="Search students..." class="search-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none mb-4">
+                                </div>
+                                
+                                <div class="overflow-auto">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr class="border-b">
+                                                <th class="text-left py-2 px-1">Student</th>
+                                                <th class="text-left py-2 px-1">Email</th>
+                                                <th class="text-left py-2 px-1">Attendance</th>
+                                                <th class="text-left py-2 px-1">Status</th>
+                                                <th class="text-left py-2 px-1"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b hover:bg-pink-50">
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <div class="student-avatar mr-2">JW</div>
+                                                        <span>John Wilson</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1 text-sm">john.w@example.com</td>
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <span class="attendance-dot bg-green-500"></span>
+                                                        <span class="text-sm">95%</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1">
+                                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Active</span>
+                                                </td>
+                                                <td class="py-3 px-1 text-right">
+                                                    <button class="text-gray-400 hover:text-primary">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-b hover:bg-pink-50">
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <div class="student-avatar mr-2">MR</div>
+                                                        <span>Mary Roberts</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1 text-sm">mary.r@example.com</td>
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <span class="attendance-dot bg-yellow-500"></span>
+                                                        <span class="text-sm">75%</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1">
+                                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Active</span>
+                                                </td>
+                                                <td class="py-3 px-1 text-right">
+                                                    <button class="text-gray-400 hover:text-primary">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-b hover:bg-pink-50">
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <div class="student-avatar mr-2">KP</div>
+                                                        <span>Kevin Park</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1 text-sm">kevin.p@example.com</td>
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <span class="attendance-dot bg-red-500"></span>
+                                                        <span class="text-sm">60%</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1">
+                                                    <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Warning</span>
+                                                </td>
+                                                <td class="py-3 px-1 text-right">
+                                                    <button class="text-gray-400 hover:text-primary">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-b hover:bg-pink-50">
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <div class="student-avatar mr-2">SL</div>
+                                                        <span>Samantha Lee</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1 text-sm">samantha.l@example.com</td>
+                                                <td class="py-3 px-1">
+                                                    <div class="flex items-center">
+                                                        <span class="attendance-dot bg-green-500"></span>
+                                                        <span class="text-sm">90%</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-1">
+                                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Active</span>
+                                                </td>
+                                                <td class="py-3 px-1 text-right">
+                                                    <button class="text-gray-400 hover:text-primary">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="flex justify-between items-center mt-4">
+                                    <div class="text-sm text-gray-500">
+                                        Showing <span class="font-medium">1-4</span> of <span class="font-medium">24</span> students
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                        <button class="px-3 py-1 rounded-md bg-gradient-to-r from-primary to-darkpink text-white">1</button>
+                                        <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">2</button>
+                                        <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">3</button>
+                                        <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Actions Modal -->
+    <div id="classActionsModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal-blur">
+        <div class="bg-white rounded-xl overflow-hidden w-full max-w-xs text-left">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Class Actions</h3>
+                    <button onclick="closeModal('classActionsModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <button class="w-full px-4 py-3 text-left text-gray-700 hover:bg-pink-50 hover:text-primary transition">
+                        <i class="fas fa-edit mr-2"></i> Edit Class
+                    </button>
+                    <button class="w-full px-4 py-3 text-left text-gray-700 hover:bg-pink-50 hover:text-primary transition">
+                        <i class="fas fa-envelope mr-2"></i> Email Class
+                    </button>
+                    <button class="w-full px-4 py-3 text-left text-gray-700 hover:bg-pink-50 hover:text-primary transition">
+                        <i class="fas fa-archive mr-2"></i> Archive Class
+                    </button>
+                    <button class="w-full px-4 py-3 text-left text-red-500 hover:bg-red-50 transition">
+                        <i class="fas fa-trash mr-2"></i> Delete Class
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Students Modal -->
+    <div id="addStudentsModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal-blur">
+        <div class="bg-white rounded-2xl overflow-hidden w-full max-w-lg transform transition-all">
+            <div class="relative">
+                <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-darkpink"></div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Add Students to Class</h3>
+                        <button onclick="closeModal('addStudentsModal')" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Search Students</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Search by name or email" class="search-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Available Students</label>
+                        <div class="border rounded-lg max-h-60 overflow-y-auto">
+                            <!-- Student 1 -->
+                            <div class="p-3 border-b hover:bg-pink-50">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="custom-checkbox mr-3">
+                                        <div class="student-avatar mr-3">AD</div>
+                                        <div>
+                                            <p class="font-medium">Alice Davis</p>
+                                            <p class="text-sm text-gray-500">alice.d@example.com</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Last active: 2 days ago</span>
+                                </div>
+                            </div>
+                            <!-- Student 2 -->
+                            <div class="p-3 border-b hover:bg-pink-50">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="custom-checkbox mr-3" checked>
+                                        <div class="student-avatar mr-3">BJ</div>
+                                        <div>
+                                            <p class="font-medium">Bob Johnson</p>
+                                            <p class="text-sm text-gray-500">bob.j@example.com</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Last active: today</span>
+                                </div>
+                            </div>
+                            <!-- Student 3 -->
+                            <div class="p-3 border-b hover:bg-pink-50">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="custom-checkbox mr-3">
+                                        <div class="student-avatar mr-3">CS</div>
+                                        <div>
+                                            <p class="font-medium">Charlie Smith</p>
+                                            <p class="text-sm text-gray-500">charlie.s@example.com</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Last active: 1 week ago</span>
+                                </div>
+                            </div>
+                            <!-- Student 4 -->
+                            <div class="p-3 hover:bg-pink-50">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="custom-checkbox mr-3">
+                                        <div class="student-avatar mr-3">EW</div>
+                                        <div>
+                                            <p class="font-medium">Emily Wilson</p>
+                                            <p class="text-sm text-gray-500">emily.w@example.com</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Last active: 3 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('addStudentsModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="button" class="px-4 py-2 bg-gradient-to-r from-primary to-darkpink text-white rounded-lg hover:opacity-90">
+                            Add Selected Students
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div id="bulkActionsModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal-blur">
+        <div class="bg-white rounded-xl overflow-hidden w-full max-w-sm text-left">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Bulk Actions</h3>
+                    <button onclick="closeModal('bulkActionsModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="p-3 border border-gray-200 rounded-lg hover:border-primary transition cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-primary mr-3">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Export Class Data</h4>
+                                <p class="text-sm text-gray-500">CSV, Excel or PDF formats</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-lg hover:border-primary transition cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-primary mr-3">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Send Bulk Email</h4>
+                                <p class="text-sm text-gray-500">To all class teachers/students</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-lg hover:border-primary transition cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-primary mr-3">
+                                <i class="fas fa-sliders-h"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Bulk Status Change</h4>
+                                <p class="text-sm text-gray-500">Activate, Archive or Delete</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button onclick="closeModal('bulkActionsModal')" class="px-4 py-2 bg-gradient-to-r from-primary to-darkpink text-white rounded-lg hover:opacity-90">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+   
+    <script src="main.js"></script>
+</body>
+</html>

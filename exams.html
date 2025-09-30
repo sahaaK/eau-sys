@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILS College Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF69B4',
+                        secondary: '#FFB6C1',
+                        glass: 'rgba(255, 255, 255, 0.25)',
+                        darkglass: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="relative overflow-x-hidden">
+   <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-primary to-pink-600 bg-clip-text text-transparent futuristic">Examination Center</h2>
+                <button onclick="openModal('scheduleExamModal')" class="bg-primary hover:bg-pink-600 text-white px-4 py-2 rounded-full flex items-center btn-hover-effect">
+                    <i class="fas fa-plus mr-2"></i> Schedule Exam
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Upcoming Exams</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start p-3 rounded-lg bg-pink-50">
+                            <div class="text-center mr-4">
+                                <p class="text-sm font-medium">NOV</p>
+                                <p class="text-xl font-bold text-primary">28</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Mid-Term Assessment</h4>
+                                <p class="text-sm text-gray-600">Intermediate Listening Test</p>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-clock mr-1"></i> 10:00 AM - 11:30 AM, Classroom B-205</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-3 rounded-lg bg-pink-50">
+                            <div class="text-center mr-4">
+                                <p class="text-sm font-medium">DEC</p>
+                                <p class="text-xl font-bold text-primary">12</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Final Exam</h4>
+                                <p class="text-sm text-gray-600">Business English Writing</p>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-clock mr-1"></i> 2:00 PM - 4:00 PM, Classroom A-302</p>
+                            </div>
+                        </div>
+                        <button class="w-full bg-pink-100 hover:bg-pink-200 text-primary px-3 py-2 rounded-full text-sm font-medium flex items-center justify-center btn-hover-effect">
+                            View All Scheduled Exams <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Exam Categories</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-pink-50 rounded-lg p-3 text-center">
+                            <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 mx-auto flex items-center justify-center mb-2">
+                                <i class="fas fa-book-open text-primary"></i>
+                            </div>
+                            <p class="font-medium">Mid-Term</p>
+                            <p class="text-sm text-gray-600">3 upcoming</p>
+                        </div>
+                        <div class="bg-pink-50 rounded-lg p-3 text-center">
+                            <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 mx-auto flex items-center justify-center mb-2">
+                                <i class="fas fa-file-alt text-primary"></i>
+                            </div>
+                            <p class="font-medium">Final Exam</p>
+                            <p class="text-sm text-gray-600">5 upcoming</p>
+                        </div>
+                        <div class="bg-pink-50 rounded-lg p-3 text-center">
+                            <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 mx-auto flex items-center justify-center mb-2">
+                                <i class="fas fa-microphone text-primary"></i>
+                            </div>
+                            <p class="font-medium">Speaking</p>
+                            <p class="text-sm text-gray-600">2 upcoming</p>
+                        </div>
+                        <div class="bg-pink-50 rounded-lg p-3 text-center">
+                            <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 mx-auto flex items-center justify-center mb-2">
+                                <i class="fas fa-headphones text-primary"></i>
+                            </div>
+                            <p class="font-medium">Listening</p>
+                            <p class="text-sm text-gray-600">1 upcoming</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Recent Results</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 rounded-lg hover:bg-pink-50 transition-colors">
+                            <div>
+                                <h4 class="font-medium">Grammar Test #3</h4>
+                                <p class="text-xs text-gray-500">Oct 15, 2023 | 53 students</p>
+                            </div>
+                            <button class="text-primary text-sm font-medium flex items-center">
+                                View <i class="fas fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center p-3 rounded-lg hover:bg-pink-50 transition-colors">
+                            <div>
+                                <h4 class="font-medium">Listening Practice</h4>
+                                <p class="text-xs text-gray-500">Oct 8, 2023 | 72 students</p>
+                            </div>
+                            <button class="text-primary text-sm font-medium flex items-center">
+                                View <i class="fas fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center p-3 rounded-lg hover:bg-pink-50 transition-colors">
+                            <div>
+                                <h4 class="font-medium">Writing Assignment</h4>
+                                <p class="text-xs text-gray-500">Sep 28, 2023 | 85 students</p>
+                            </div>
+                            <button class="text-primary text-sm font-medium flex items-center">
+                                View <i class="fas fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                        <button class="w-full mt-2 bg-pink-100 hover:bg-pink-200 text-primary px-3 py-2 rounded-full text-sm font-medium flex items-center justify-center btn-hover-effect">
+                            View All Exam Results <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 rounded-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Exam Statistics</h3>
+                    <select class="bg-pink-50 text-sm rounded px-3 py-1 outline-none">
+                        <option>Current Semester</option>
+                        <option>Last Semester</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+                <canvas id="examStatsChart" height="300"></canvas>
+            </div>
+
+   <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILS College Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF69B4',
+                        secondary: '#FFB6C1',
+                        glass: 'rgba(255, 255, 255, 0.25)',
+                        darkglass: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="relative overflow-x-hidden">
+  <h2 class="text-2xl font-bold bg-gradient-to-r from-primary to-pink-600 bg-clip-text text-transparent futuristic mb-6">College Analytics</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Student Demographics</h3>
+                    <canvas id="demographicsChart" height="250"></canvas>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Class Enrollment</h3>
+                    <canvas id="enrollmentAnalyticsChart" height="250"></canvas>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 rounded-xl mb-6">
+                <h3 class="font-bold text-lg mb-4">Revenue Trends</h3>
+                <canvas id="revenueTrendsChart" height="300"></canvas>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Top Performing Classes</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Advanced Grammar 101</span>
+                                <span>94% pass rate</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Business English</span>
+                                <span>89% pass rate</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 89%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>IELTS Preparation</span>
+                                <span>87% pass rate</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 87%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Creative Writing</span>
+                                <span>82% pass rate</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Conversation Practice</span>
+                                <span>78% pass rate</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="font-bold text-lg mb-4">Teacher Performance</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Teacher" class="w-6 h-6 rounded-full mr-2">
+                                    <span class="text-sm">Prof. Williams</span>
+                                </div>
+                                <span class="text-sm">4.9/5 rating</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="Teacher" class="w-6 h-6 rounded-full mr-2">
+                                    <span class="text-sm">Prof. Anderson</span>
+                                </div>
+                                <span class="text-sm">4.7/5 rating</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Teacher" class="w-6 h-6 rounded-full mr-2">
+                                    <span class="text-sm">Prof. Garcia</span>
+                                </div>
+                                <span class="text-sm">4.6/5 rating</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Teacher" class="w-6 h-6 rounded-full mr-2">
+                                    <span class="text-sm">Prof. Clark</span>
+                                </div>
+                                <span class="text-sm">4.4/5 rating</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Teacher" class="w-6 h-6 rounded-full mr-2">
+                                    <span class="text-sm">Prof. Carter</span>
+                                </div>
+                                <span class="text-sm">4.2/5 rating</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 84%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   <script src="main.js"></script>
+</body>
+</html>

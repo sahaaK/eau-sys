@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILS College Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF69B4',
+                        secondary: '#FFB6C1',
+                        glass: 'rgba(255, 255, 255, 0.25)',
+                        darkglass: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="relative overflow-x-hidden">
+     <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent futuristic">Financial Management</h2>
+                <p class="text-gray-600 mt-1">Track and manage all payment activities</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button class="glass-card hover:bg-pink-50 text-pink-600 hover:text-pink-700 px-4 py-2 rounded-xl flex items-center btn-hover-effect">
+                    <i class="fas fa-file-export mr-2"></i> Export
+                </button>
+                <button onclick="openModal('createInvoiceModal')" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-4 py-2 rounded-xl flex items-center btn-hover-effect shadow-lg">
+                    <i class="fas fa-file-invoice-dollar mr-2"></i> Create Invoice
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <!-- Total Revenue -->
+            <div class="glass-card p-6 rounded-xl flex flex-col">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-600">Total Revenue</p>
+                        <h3 class="text-2xl font-bold mt-1 text-pink-600">$89,420</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-pink-100 text-pink-600">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="text-gray-500">Annual Target</span>
+                        <span class="font-medium">$120k</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-pink-600 h-2 rounded-full" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Revenue -->
+            <div class="glass-card p-6 rounded-xl flex flex-col">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-600">This Month</p>
+                        <h3 class="text-2xl font-bold mt-1 text-purple-600">$28,950</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-purple-100 text-purple-600">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="text-gray-500">Monthly Target</span>
+                        <span class="font-medium">$35k</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-purple-600 h-2 rounded-full" style="width: 83%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Payments -->
+            <div class="glass-card p-6 rounded-xl flex flex-col">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-600">Pending Payments</p>
+                        <h3 class="text-2xl font-bold mt-1 text-yellow-600">$12,150</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-gray-500">From</span>
+                        <span class="font-medium">24 students</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 42%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overdue Payments -->
+            <div class="glass-card p-6 rounded-xl flex flex-col">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-600">Overdue Payments</p>
+                        <h3 class="text-2xl font-bold mt-1 text-red-600">$5,300</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-red-100 text-red-600">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-gray-500">From</span>
+                        <span class="font-medium">9 students</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-red-600 h-2 rounded-full" style="width: 18%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Quick Payment -->
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="font-bold text-lg mb-4 flex items-center justify-between">
+                    <span>Quick Student Payment</span>
+                    <i class="fas fa-bolt text-yellow-500"></i>
+                </h3>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="student-search">Select Student</label>
+                    <div class="relative">
+                        <input type="text" id="student-search" placeholder="Search student..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                        <button class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="amount">Amount</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                            $
+                        </span>
+                        <input type="number" id="amount" placeholder="0.00" class="w-full pl-8 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="payment-method">Payment Method</label>
+                    <select id="payment-method" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                        <option value="credit-card">Credit Card</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="cash">Cash</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="payment-notes">Notes (Optional)</label>
+                    <textarea id="payment-notes" rows="2" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent" placeholder="Add any notes about this payment..."></textarea>
+                </div>
+
+                <button class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg btn-hover-effect shadow-lg">
+                    <i class="fas fa-check-circle mr-2"></i> Process Payment
+                </button>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="glass-card p-6 rounded-xl lg:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Recent Transactions</h3>
+                    <div class="flex space-x-2">
+                        <button class="text-sm text-gray-600 hover:text-pink-600 px-3 py-1 rounded-lg">
+                            <i class="fas fa-filter mr-1"></i> Filter
+                        </button>
+                        <button class="text-sm text-pink-600 hover:bg-pink-50 px-3 py-1 rounded-lg">
+                            View All <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-gray-600 border-b">
+                                <th class="pb-3 pl-2"><i class="fas fa-receipt text-gray-400"></i> Invoice</th>
+                                <th class="pb-3"><i class="fas fa-user-graduate text-gray-400"></i> Student</th>
+                                <th class="pb-3"><i class="fas fa-calendar-day text-gray-400"></i> Date</th>
+                                <th class="pb-3 text-right"><i class="fas fa-dollar-sign text-gray-400"></i> Amount</th>
+                                <th class="pb-3 pr-2 text-center"><i class="fas fa-circle-notch text-gray-400"></i> Status</th>
+                                <th class="pb-3 pr-2 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 pl-2 font-medium">#INV-2023-0089</td>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-pink-600 text-sm"></i>
+                                        </div>
+                                        Olivia Thompson
+                                    </div>
+                                </td>
+                                <td>Nov 15, 2023</td>
+                                <td class="text-right font-medium">$1,200.00</td>
+                                <td class="text-center">
+                                    <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-800 inline-flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i> Paid
+                                    </span>
+                                </td>
+                                <td class="text-right pr-2">
+                                    <button class="text-pink-600 hover:text-pink-800 p-1 rounded-md">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 pl-2 font-medium">#INV-2023-0088</td>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-blue-600 text-sm"></i>
+                                        </div>
+                                        Michael Brown
+                                    </div>
+                                </td>
+                                <td>Nov 14, 2023</td>
+                                <td class="text-right font-medium">$1,200.00</td>
+                                <td class="text-center">
+                                    <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-800 inline-flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i> Paid
+                                    </span>
+                                </td>
+                                <td class="text-right pr-2">
+                                    <button class="text-pink-600 hover:text-pink-800 p-1 rounded-md">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 pl-2 font-medium">#INV-2023-0087</td>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-purple-600 text-sm"></i>
+                                        </div>
+                                        Sophia Martinez
+                                    </div>
+                                </td>
+                                <td>Nov 12, 2023</td>
+                                <td class="text-right font-medium">$800.00</td>
+                                <td class="text-center">
+                                    <span class="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 inline-flex items-center">
+                                        <i class="fas fa-clock mr-1 animate-pulse"></i> Pending
+                                    </span>
+                                </td>
+                                <td class="text-right pr-2">
+                                    <button class="text-pink-600 hover:text-pink-800 p-1 rounded-md">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 pl-2 font-medium">#INV-2023-0086</td>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-red-600 text-sm"></i>
+                                        </div>
+                                        David Wilson
+                                    </div>
+                                </td>
+                                <td>Nov 10, 2023</td>
+                                <td class="text-right font-medium">$1,200.00</td>
+                                <td class="text-center">
+                                    <span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-800 inline-flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Overdue
+                                    </span>
+                                </td>
+                                <td class="text-right pr-2">
+                                    <button class="text-pink-600 hover:text-pink-800 p-1 rounded-md">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 pl-2 font-medium">#INV-2023-0085</td>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-green-600 text-sm"></i>
+                                        </div>
+                                        Emily Johnson
+                                    </div>
+                                </td>
+                                <td>Nov 8, 2023</td>
+                                <td class="text-right font-medium">$1,200.00</td>
+                                <td class="text-center">
+                                    <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-800 inline-flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i> Paid
+                                    </span>
+                                </td>
+                                <td class="text-right pr-2">
+                                    <button class="text-pink-600 hover:text-pink-800 p-1 rounded-md">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex justify-between items-center">
+                    <div class="text-sm text-gray-600">
+                        Showing <span class="font-medium">5</span> of <span class="font-medium">124</span> transactions
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-1 rounded-lg bg-pink-600 text-white">
+                            1
+                        </button>
+                        <button class="px-3 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                            2
+                        </button>
+                        <button class="px-3 py-1 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="glass-card p-6 rounded-xl mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Payment Methods</h3>
+                <button onclick="openModal('addPaymentMethodModal')" class="text-sm bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700 px-3 py-1 rounded-lg flex items-center btn-hover-effect">
+                    <i class="fas fa-plus mr-1"></i> Add Method
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Credit Card -->
+                <div class="glass-card-primary p-4 rounded-xl hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mr-3">
+                                <i class="fab fa-cc-visa text-pink-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Credit Card</h4>
+                                <p class="text-xs text-gray-600">Visa/Mastercard</p>
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-white bg-opacity-80 flex items-center justify-center">
+                            <i class="fas fa-check text-pink-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-pink-100">
+                        <div class="text-xs text-gray-600">Processed via <span class="font-medium">Stripe</span></div>
+                        <button class="text-sm text-pink-600 hover:text-pink-800 flex items-center">
+                            <i class="fas fa-cog mr-1"></i> Configure
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bank Transfer -->
+                <div class="glass-card p-4 rounded-xl hover:shadow-lg transition-all duration-300 payment-option">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                <i class="fas fa-university text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Bank Transfer</h4>
+                                <p class="text-xs text-gray-600">Direct deposit</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 mb-3">Allow students to pay directly to your bank account with invoice references</div>
+                    <button class="w-full text-sm text-pink-600 hover:text-pink-800 hover:bg-pink-50 py-1 rounded-lg text-center">
+                        <i class="fas fa-cog mr-1"></i> Configure
+                    </button>
+                </div>
+
+                <!-- PayPal -->
+                <div class="glass-card p-4 rounded-xl hover:shadow-lg transition-all duration-300 payment-option">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
+                                <i class="fab fa-paypal text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">PayPal</h4>
+                                <p class="text-xs text-gray-600">Global payments</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 mb-3">Accept payments via PayPal with your existing business account</div>
+                    <button class="w-full text-sm text-pink-600 hover:text-pink-800 hover:bg-pink-50 py-1 rounded-lg text-center">
+                        <i class="fas fa-cog mr-1"></i> Configure
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Analytics -->
+        <div class="glass-card p-6 rounded-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Payment Analytics</h3>
+                <div class="flex space-x-2">
+                    <button class="text-sm bg-white bg-opacity-80 text-gray-700 px-3 py-1 rounded-lg">
+                        Weekly
+                    </button>
+                    <button class="text-sm bg-gradient-to-r from-pink-600 to-purple-600 text-white px-3 py-1 rounded-lg">
+                        Monthly
+                    </button>
+                    <button class="text-sm bg-white bg-opacity-80 text-gray-700 px-3 py-1 rounded-lg">
+                        Yearly
+                    </button>
+                </div>
+            </div>
+            <div class="h-64">
+                <!-- This would be replaced with an actual chart in production -->
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border border-gray-200">
+                    <div class="text-center p-6">
+                        <i class="fas fa-chart-line text-4xl text-pink-600 mb-3"></i>
+                        <h4 class="font-medium text-gray-700">Payment Trends Chart</h4>
+                        <p class="text-xs text-gray-500 mt-1">Visualization of payment data would appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Invoice Modal -->
+    <div id="createInvoiceModal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 py-6 z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Create New Invoice</h3>
+                    <button onclick="closeModal('createInvoiceModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="invoice-student">Student</label>
+                        <select id="invoice-student" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                            <option value="">Select student</option>
+                            <option value="1">Olivia Thompson</option>
+                            <option value="2">Michael Brown</option>
+                            <option value="3">Sophia Martinez</option>
+                            <option value="4">David Wilson</option>
+                            <option value="5">Emily Johnson</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="invoice-date">Invoice Date</label>
+                        <input type="date" id="invoice-date" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="invoice-due">Due Date</label>
+                        <input type="date" id="invoice-due" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="invoice-number">Invoice Number</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                #
+                            </span>
+                            <input type="text" id="invoice-number" value="INV-2023-0090" readonly class="w-full pl-8 px-4 py-2 rounded-lg border border-gray-300 bg-gray-100">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="font-medium text-gray-800 mb-3">Invoice Items</h4>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-gray-600 border-b">
+                                    <th class="pb-2">Description</th>
+                                    <th class="pb-2">Quantity</th>
+                                    <th class="pb-2">Unit Price</th>
+                                    <th class="pb-2">Amount</th>
+                                    <th class="pb-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-2">
+                                        <input type="text" placeholder="Item description" class="px-3 py-1 rounded-lg border border-gray-300 focus:ring-1 focus:ring-pink-500 focus:border-transparent w-full">
+                                    </td>
+                                    <td class="py-2">
+                                        <input type="number" placeholder="1" class="px-3 py-1 rounded-lg border border-gray-300 focus:ring-1 focus:ring-pink-500 focus:border-transparent w-20">
+                                    </td>
+                                    <td class="py-2">
+                                        <input type="text" placeholder="0.00" class="px-3 py-1 rounded-lg border border-gray-300 focus:ring-1 focus:ring-pink-500 focus:border-transparent w-24">
+                                    </td>
+                                    <td class="py-2">$0.00</td>
+                                    <td class="py-2 text-center">
+                                        <button class="text-red-500 hover:text-red-700">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="mt-3 text-sm text-pink-600 hover:text-pink-800 flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Item
+                    </button>
+                </div>
+                
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="invoice-notes">Notes</label>
+                        <textarea id="invoice-notes" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent" placeholder="Add any notes for the student..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <div class="p-4 rounded-lg bg-gray-50">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-600">Subtotal:</span>
+                                <span class="font-medium">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-600">Tax (10%):</span>
+                                <span class="font-medium">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-t border-gray-200 mt-3">
+                                <span class="text-gray-800 font-bold">Total:</span>
+                                <span class="text-pink-600 font-bold text-xl">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button onclick="closeModal('createInvoiceModal')" class="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button class="px-6 py-2 rounded-lg bg-pink-600 text-white hover:bg-pink-700">
+                        <i class="fas fa-save mr-2"></i> Save Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Payment Method Modal -->
+    <div id="addPaymentMethodModal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 py-6 z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Add Payment Method</h3>
+                    <button onclick="closeModal('addPaymentMethodModal')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-medium text-gray-800 mb-3">Select Provider</h4>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="p-3 rounded-lg border border-gray-200 hover:border-pink-500 hover:bg-pink-50 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                                    <i class="fab fa-cc-stripe text-blue-600"></i>
+                                </div>
+                                <span class="text-xs">Stripe</span>
+                            </button>
+                            <button class="p-3 rounded-lg border border-gray-200 hover:border-pink-500 hover:bg-pink-50 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center mb-2">
+                                    <i class="fab fa-paypal text-blue-600"></i>
+                                </div>
+                                <span class="text-xs">PayPal</span>
+                            </button>
+                            <button class="p-3 rounded-lg border border-gray-200 hover:border-pink-500 hover:bg-pink-50 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                                    <i class="fas fa-university text-purple-600"></i>
+                                </div>
+                                <span class="text-xs">Bank</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="method-name">Display Name</label>
+                        <input type="text" id="method-name" placeholder="e.g., Credit Card Payments" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="method-fee">Processing Fee (%)</label>
+                        <input type="number" id="method-fee" placeholder="0.0" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="pt-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded border-pink-500 text-pink-600 focus:ring-pink-500">
+                            <span class="ml-2 text-sm text-gray-700">Make this payment method active</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button onclick="closeModal('addPaymentMethodModal')" class="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button class="px-6 py-2 rounded-lg bg-pink-600 text-white hover:bg-pink-700">
+                        <i class="fas fa-plus mr-2"></i> Add Method
+                    </button>
+                </div>
+            </div>
+        </div>
+
+   <script src="main.js"></script>
+</body>
+</html>

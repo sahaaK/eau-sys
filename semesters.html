@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILS College Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF69B4',
+                        secondary: '#FFB6C1',
+                        glass: 'rgba(255, 255, 255, 0.25)',
+                        darkglass: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="relative overflow-x-hidden">
+    <!-- Header Section -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent futuristic">Semester Management</h2>
+                    <p class="text-gray-500">Manage academic periods, enrollment, and semester configurations</p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="openModal('addSemesterModal')" class="btn-hover-effect bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-5 py-3 rounded-xl flex items-center font-medium">
+                        <i class="fas fa-plus mr-2"></i> Add Semester
+                    </button>
+                    <button onclick="openModal('bulkActionsModal')" class="btn-hover-effect bg-white text-pink-600 border border-pink-200 hover:bg-pink-50 px-4 py-3 rounded-xl flex items-center font-medium">
+                        <i class="fas fa-tasks mr-2"></i> Bulk Actions
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Current Semester Dashboard -->
+            <div class="glass-card p-6 rounded-2xl mb-8 border border-pink-100">
+                <div class="flex flex-wrap gap-6 justify-between items-start mb-6">
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-xl flex items-center">
+                            <span class="bg-pink-100 text-pink-600 p-2 rounded-full mr-3">
+                                <i class="fas fa-calendar-check"></i>
+                            </span>
+                            Current Semester
+                        </h3>
+                        <p class="text-pink-600 font-semibold text-lg mt-2">Fall 2023 (Sep 5 - Dec 20)</p>
+                        <p class="text-sm text-gray-600">12 weeks, 48 classes, 1248 students</p>
+                        <div class="flex gap-3 mt-3">
+                            <button onclick="openModal('semesterStatsModal')" class="text-sm bg-pink-50 hover:bg-pink-100 text-pink-600 px-3 py-1 rounded-full flex items-center">
+                                <i class="fas fa-chart-line mr-1"></i> View Stats
+                            </button>
+                            <button class="text-sm bg-white border border-pink-200 hover:bg-pink-50 text-pink-600 px-3 py-1 rounded-full flex items-center">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-[250px]">
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Progress</span>
+                            <span>65% completed (8 of 12 weeks)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-pink-500 to-pink-600 h-3 rounded-full" style="width: 65%"></div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm text-gray-600">
+                                <span>Start Date</span>
+                                <span class="font-medium">Sep 5, 2023</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-600 mt-1">
+                                <span>End Date</span>
+                                <span class="font-medium">Dec 20, 2023</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-600 mt-1">
+                                <span>Days Remaining</span>
+                                <span class="font-medium text-pink-600">28 days</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col justify-between self-stretch min-w-[180px]">
+                        <button onclick="openModal('calendarModal')" class="btn-hover-effect bg-pink-100 hover:bg-pink-200 text-pink-700 px-5 py-2.5 rounded-xl flex items-center justify-center font-medium">
+                            <i class="fas fa-calendar-alt mr-2"></i> View Calendar
+                        </button>
+                        <button onclick="openModal('quickActionsModal')" class="btn-hover-effect bg-white border border-pink-300 hover:bg-pink-50 text-pink-700 px-5 py-2.5 rounded-xl flex items-center justify-center font-medium">
+                            <i class="fas fa-bolt mr-2"></i> Quick Actions
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Key Performance Indicators -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
+                    <div class="glass-card p-4 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Enrollment</p>
+                                <p class="text-2xl font-bold text-pink-600">1,248</p>
+                            </div>
+                            <span class="bg-pink-100 text-pink-600 p-2 rounded-lg">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs flex items-center text-green-500">
+                                <i class="fas fa-arrow-up mr-1"></i> 12.5% from last term
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Attendance Avg</p>
+                                <p class="text-2xl font-bold text-pink-600">87.3%</p>
+                            </div>
+                            <span class="bg-pink-100 text-pink-600 p-2 rounded-lg">
+                                <i class="fas fa-user-check"></i>
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs flex items-center text-red-500">
+                                <i class="fas fa-arrow-down mr-1"></i> 3.2% from last term
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Revenue</p>
+                                <p class="text-2xl font-bold text-pink-600">$124.8K</p>
+                            </div>
+                            <span class="bg-pink-100 text-pink-600 p-2 rounded-lg">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs flex items-center text-green-500">
+                                <i class="fas fa-arrow-up mr-1"></i> 18.7% from last term
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Classes</p>
+                                <p class="text-2xl font-bold text-pink-600">48</p>
+                            </div>
+                            <span class="bg-pink-100 text-pink-600 p-2 rounded-lg">
+                                <i class="fas fa-book"></i>
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs flex items-center text-green-500">
+                                <i class="fas fa-arrow-up mr-1"></i> 14.3% from last term
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity Timeline -->
+                <div class="mt-8">
+                    <h4 class="font-semibold text-lg mb-4 flex items-center">
+                        <i class="fas fa-history mr-2 text-pink-600"></i>
+                        Recent Activity
+                    </h4>
+                    <div class="pl-4">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="glass-card p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h5 class="font-medium">Midterm grades submitted</h5>
+                                        <p class="text-sm text-gray-500">For all 48 classes</p>
+                                    </div>
+                                    <span class="text-xs text-gray-400">2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="glass-card p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h5 class="font-medium">New enrollment confirmed</h5>
+                                        <p class="text-sm text-gray-500">12 new students enrolled</p>
+                                    </div>
+                                    <span class="text-xs text-gray-400">1 day ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Semester Quick Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass-card p-5 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors group">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg flex items-center">
+                                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-bell"></i>
+                                </span>
+                                Upcoming Semester
+                            </h3>
+                        </div>
+                        <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs">Coming Soon</span>
+                    </div>
+                    <p class="text-pink-600 font-semibold text-lg">Winter 2024 (Jan 8 - Mar 29)</p>
+                    <p class="text-sm text-gray-600 mb-4">12 weeks, starts in 6 weeks</p>
+                    <div class="border-t border-gray-100 pt-3">
+                        <button onclick="openModal('prepareEnrollmentModal')" class="text-pink-600 hover:text-pink-700 font-medium text-sm inline-flex items-center group-hover:text-pink-700 transition-colors">
+                            Prepare Enrollment
+                            <i class="fas fa-chevron-right ml-1 transition-all group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-5 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors group">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg flex items-center">
+                                <span class="bg-green-100 text-green-600 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-check-circle"></i>
+                                </span>
+                                Previous Semester
+                            </h3>
+                        </div>
+                        <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs">Completed</span>
+                    </div>
+                    <p class="text-pink-600 font-semibold text-lg">Summer 2023 (Jun 5 - Aug 25)</p>
+                    <p class="text-sm text-gray-600 mb-4">12 weeks, 1120 students</p>
+                    <div class="border-t border-gray-100 pt-3">
+                        <button onclick="openModal('viewReportsModal')" class="text-pink-600 hover:text-pink-700 font-medium text-sm inline-flex items-center group-hover:text-pink-700 transition-colors">
+                            View Reports & Analysis
+                            <i class="fas fa-chevron-right ml-1 transition-all group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-5 rounded-xl border border-pink-50 hover:border-pink-100 transition-colors group">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg flex items-center">
+                                <span class="bg-purple-100 text-purple-600 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-cog"></i>
+                                </span>
+                                Academic Year
+                            </h3>
+                        </div>
+                        <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-xs">Settings</span>
+                    </div>
+                    <p class="text-pink-600 font-semibold text-lg">2023/2024</p>
+                    <p class="text-sm text-gray-600 mb-4">3 semesters (Fall, Winter, Summer)</p>
+                    <div class="border-t border-gray-100 pt-3">
+                        <button onclick="openModal('configureAcademicYearModal')" class="text-pink-600 hover:text-pink-700 font-medium text-sm inline-flex items-center group-hover:text-pink-700 transition-colors">
+                            Configure Academic Year
+                            <i class="fas fa-chevron-right ml-1 transition-all group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- All Semesters Table -->
+            <div class="glass-card p-6 rounded-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <h3 class="font-bold text-xl flex items-center">
+                        <i class="fas fa-table mr-2 text-pink-600"></i>
+                        All Semesters
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="relative">
+                            <input type="text" placeholder="Search semesters..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 w-full md:w-64">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button onclick="openModal('filterSemestersModal')" class="bg-white border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg flex items-center">
+                            <i class="fas fa-filter mr-2 text-pink-600"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-gray-600 border-b">
+                                <th class="pb-3 font-semibold">Semester</th>
+                                <th class="pb-3 font-semibold">Period</th>
+                                <th class="pb-3 font-semibold">Classes</th>
+                                <th class="pb-3 font-semibold">Students</th>
+                                <th class="pb-3 font-semibold">Revenue</th>
+                                <th class="pb-3 font-semibold">Status</th>
+                                <th class="pb-3 font-semibold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 font-medium">
+                                    <div class="flex items-center">
+                                        <span class="w-3 h-3 bg-pink-600 rounded-full mr-2 animate-pulse"></span>
+                                        Fall 2023
+                                    </div>
+                                </td>
+                                <td class="py-4">Sep 5 - Dec 20</td>
+                                <td class="py-4">48</td>
+                                <td class="py-4">1248</td>
+                                <td class="py-4">$124,800</td>
+                                <td class="py-4">
+                                    <span class="status-pill bg-blue-100 text-blue-800">In Progress</span>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('viewSemesterModal')" class="text-pink-600 hover:text-pink-700 p-1.5 rounded-full hover:bg-pink-100 transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="openModal('editSemesterModal')" class="text-blue-600 hover:text-blue-700 p-1.5 rounded-full hover:bg-blue-100 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 font-medium">Summer 2023</td>
+                                <td class="py-4">Jun 5 - Aug 25</td>
+                                <td class="py-4">42</td>
+                                <td class="py-4">1120</td>
+                                <td class="py-4">$112,000</td>
+                                <td class="py-4">
+                                    <span class="status-pill bg-green-100 text-green-800">Completed</span>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('viewSemesterModal')" class="text-pink-600 hover:text-pink-700 p-1.5 rounded-full hover:bg-pink-100 transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="openModal('editSemesterModal')" class="text-blue-600 hover:text-blue-700 p-1.5 rounded-full hover:bg-blue-100 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 font-medium">Winter 2023</td>
+                                <td class="py-4">Jan 9 - Mar 31</td>
+                                <td class="py-4">38</td>
+                                <td class="py-4">986</td>
+                                <td class="py-4">$98,600</td>
+                                <td class="py-4">
+                                    <span class="status-pill bg-green-100 text-green-800">Completed</span>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('viewSemesterModal')" class="text-pink-600 hover:text-pink-700 p-1.5 rounded-full hover:bg-pink-100 transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="openModal('editSemesterModal')" class="text-blue-600 hover:text-blue-700 p-1.5 rounded-full hover:bg-blue-100 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 font-medium">Fall 2022</td>
+                                <td class="py-4">Sep 6 - Dec 19</td>
+                                <td class="py-4">36</td>
+                                <td class="py-4">876</td>
+                                <td class="py-4">$87,600</td>
+                                <td class="py-4">
+                                    <span class="status-pill bg-green-100 text-green-800">Completed</span>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('viewSemesterModal')" class="text-pink-600 hover:text-pink-700 p-1.5 rounded-full hover:bg-pink-100 transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="openModal('editSemesterModal')" class="text-blue-600 hover:text-blue-700 p-1.5 rounded-full hover:bg-blue-100 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-pink-50 transition-colors">
+                                <td class="py-4 font-medium">Summer 2022</td>
+                                <td class="py-4">Jun 6 - Aug 26</td>
+                                <td class="py-4">32</td>
+                                <td class="py-4">754</td>
+                                <td class="py-4">$75,400</td>
+                                <td class="py-4">
+                                    <span class="status-pill bg-green-100 text-green-800">Completed</span>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('viewSemesterModal')" class="text-pink-600 hover:text-pink-700 p-1.5 rounded-full hover:bg-pink-100 transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="openModal('editSemesterModal')" class="text-blue-600 hover:text-blue-700 p-1.5 rounded-full hover:bg-blue-100 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
+                    <div class="text-sm text-gray-500">
+                        Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">12</span> semesters
+                    </div>
+                    <div class="flex space-x-1">
+                        <button class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="px-4 py-2 rounded-lg bg-pink-600 text-white">
+                            1
+                        </button>
+                        <button class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50">
+                            2
+                        </button>
+                        <button class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50">
+                            3
+                        </button>
+                        <button class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- All Modals -->
+    
+    <!-- Add Semester Modal -->
+    <div id="addSemesterModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Add New Semester</h3>
+                    <button onclick="closeModal('addSemesterModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Semester Name</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" placeholder="e.g., Fall 2023">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                            <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                            <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                            <option>2023/2024</option>
+                            <option>2024/2025</option>
+                            <option>2022/2023</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" rows="3" placeholder="Any notes about this semester..."></textarea>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                        <button onclick="closeModal('addSemesterModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                            Save Semester
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Semester Modal -->
+    <div id="viewSemesterModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Semester Details</h3>
+                    <button onclick="closeModal('viewSemesterModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-pink-50 rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg text-pink-700">Fall 2023</h4>
+                            <p class="text-pink-600">Sep 5 - Dec 20, 2023</p>
+                        </div>
+                        <span class="status-pill bg-blue-100 text-blue-800">In Progress</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <h5 class="font-medium text-gray-700 mb-2">Key Information</h5>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Academic Year:</span>
+                                <span class="font-medium">2023/2024</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Duration:</span>
+                                <span class="font-medium">16 weeks</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Classes:</span>
+                                <span class="font-medium">48</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Students:</span>
+                                <span class="font-medium">1,248</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Progress:</span>
+                                <span class="font-medium">65% complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-medium text-gray-700 mb-2">Revenue Summary</h5>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Revenue:</span>
+                                <span class="font-medium">$124,800</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tuition Revenue:</span>
+                                <span class="font-medium">$118,560</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Fees:</span>
+                                <span class="font-medium">$6,240</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Avg. per Student:</span>
+                                <span class="font-medium">$100.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4 mt-4">
+                    <h5 class="font-medium text-gray-700 mb-2">Notes</h5>
+                    <p class="text-sm text-gray-600 italic">
+                        This semester includes the new curriculum changes for the Computer Science department. Special attention should be paid to CS101 enrollment which is expected to be high.
+                    </p>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="closeModal('viewSemesterModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Semester Statistics Modal -->
+    <div id="semesterStatsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Semester Analytics</h3>
+                    <button onclick="closeModal('semesterStatsModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-700 mb-2">Fall 2023 (Sep 5 - Dec 20)</h4>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="status-pill bg-blue-100 text-blue-800 mr-2">In Progress</span>
+                        65% complete (8 of 12 weeks)
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="glass-card p-4 rounded-lg">
+                        <h5 class="font-medium text-gray-700 mb-3">Enrollment Trend</h5>
+                        <div class="h-40 bg-gray-100 rounded flex items-center justify-center">
+                            <span class="text-gray-400">Chart: Enrollment Over Time</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-lg">
+                        <h5 class="font-medium text-gray-700 mb-3">Attendance Rate</h5>
+                        <div class="h-40 bg-gray-100 rounded flex items-center justify-center">
+                            <span class="text-gray-400">Chart: Weekly Attendance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-lg">
+                        <h5 class="font-medium text-gray-700 mb-3">Department Distribution</h5>
+                        <div class="h-40 bg-gray-100 rounded flex items-center justify-center">
+                            <span class="text-gray-400">Chart: Departments Breakdown</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-lg">
+                        <h5 class="font-medium text-gray-700 mb-3">Performance Metrics</h5>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Avg. Grades:</span>
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <span class="font-medium">B+ (82%)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Satisfaction:</span>
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 88%"></div>
+                                </div>
+                                <span class="font-medium">88%</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Retention:</span>
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 94%"></div>
+                                </div>
+                                <span class="font-medium">94%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        <i class="fas fa-download mr-2"></i> Export
+                    </button>
+                    <button onclick="closeModal('semesterStatsModal')" class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                        Done
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calendar View Modal -->
+    <div id="calendarModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Semester Calendar</h3>
+                    <button onclick="closeModal('calendarModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h4 class="font-medium">Fall 2023</h4>
+                        <p class="text-sm text-gray-500">Sep 5 - Dec 20, 2023</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="px-3 py-1 bg-pink-600 text-white rounded-md text-sm hover:bg-pink-700">
+                            Today
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="text-gray-600 text-sm">
+                                <th class="border p-2 w-40 font-medium">Sunday</th>
+                                <th class="border p-2 w-40 font-medium">Monday</th>
+                                <th class="border p-2 w-40 font-medium">Tuesday</th>
+                                <th class="border p-2 w-40 font-medium">Wednesday</th>
+                                <th class="border p-2 w-40 font-medium">Thursday</th>
+                                <th class="border p-2 w-40 font-medium">Friday</th>
+                                <th class="border p-2 w-40 font-medium">Saturday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Week 1 -->
+                            <tr>
+                                <td class="border p-2 h-24 align-top text-sm bg-gray-50 text-gray-400">27</td>
+                                <td class="border p-2 h-24 align-top text-sm bg-gray-50 text-gray-400">28</td>
+                                <td class="border p-2 h-24 align-top text-sm bg-gray-50 text-gray-400">29</td>
+                                <td class="border p-2 h-24 align-top text-sm bg-gray-50 text-gray-400">30</td>
+                                <td class="border p-2 h-24 align-top text-sm bg-gray-50 text-gray-400">31</td>
+                                <td class="border p-2 h-24 align-top text-sm">1
+                                    <div class="text-xs mt-1 p-1 bg-pink-100 rounded">New student orientation</div>
+                                </td>
+                                <td class="border p-2 h-24 align-top text-sm">2</td>
+                            </tr>
+                            <!-- Week 2 -->
+                            <tr>
+                                <td class="border p-2 h-24 align-top text-sm">3</td>
+                                <td class="border p-2 h-24 align-top text-sm">4</td>
+                                <td class="border p-2 h-24 align-top text-sm bg-pink-50 font-medium">5
+                                    <div class="text-xs mt-1 p-1 bg-pink-200 rounded font-semibold">Semester Starts</div>
+                                </td>
+                                <td class="border p-2 h-24 align-top text-sm">6</td>
+                                <td class="border p-2 h-24 align-top text-sm">7</td>
+                                <td class="border p-2 h-24 align-top text-sm">8</td>
+                                <td class="border p-2 h-24 align-top text-sm">9</td>
+                            </tr>
+                            <!-- Week with current date highlighted -->
+                            <tr>
+                                <td class="border p-2 h-24 align-top text-sm">10</td>
+                                <td class="border p-2 h-24 align-top text-sm">11</td>
+                                <td class="border p-2 h-24 align-top text-sm">12</td>
+                                <td class="border p-2 h-24 align-top text-sm bg-pink-100 font-bold">13
+                                    <div class="text-xs mt-1 p-1 bg-pink-200 rounded">Today</div>
+                                </td>
+                                <td class="border p-2 h-24 align-top text-sm">14</td>
+                                <td class="border p-2 h-24 align-top text-sm">15</td>
+                                <td class="border p-2 h-24 align-top text-sm">16</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4">
+                    <h5 class="font-medium text-gray-700 mb-2">Key Dates</h5>
+                    <ul class="text-sm space-y-2">
+                        <li class="flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-pink-600 mr-2"></span>
+                            <span><strong>Sep 5:</strong> First day of classes</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-blue-600 mr-2"></span>
+                            <span><strong>Oct 10-13:</strong> Midterm exams</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-purple-600 mr-2"></span>
+                            <span><strong>Nov 22-24:</strong> Thanksgiving break</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-red-600 mr-2"></span>
+                            <span><strong>Dec 11-15:</strong> Final exams</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-green-600 mr-2"></span>
+                            <span><strong>Dec 20:</strong> Semester ends</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-end">
+                    <button onclick="closeModal('calendarModal')" class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                        Close Calendar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions Modal -->
+    <div id="quickActionsModal" class="modal-overlay">
+        <div class="modal-content max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-xl text-pink-600">Quick Actions</h3>
+                    <button onclick="closeModal('quickActionsModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-3">
+                    <button class="w-full p-3 bg-pink-50 hover:bg-pink-100 rounded-lg flex items-center">
+                        <span class="bg-pink-600 text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-bullhorn"></i>
+                        </span>
+                        <span class="font-medium">Send Announcement</span>
+                    </button>
+                    
+                    <button class="w-full p-3 bg-blue-50 hover:bg-blue-100 rounded-lg flex items-center">
+                        <span class="bg-blue-600 text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <span class="font-medium">Email Faculty</span>
+                    </button>
+                    
+                    <button class="w-full p-3 bg-purple-50 hover:bg-purple-100 rounded-lg flex items-center">
+                        <span class="bg-purple-600 text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </span>
+                        <span class="font-medium">Generate Reports</span>
+                    </button>
+                    
+                    <button class="w-full p-3 bg-green-50 hover:bg-green-100 rounded-lg flex items-center">
+                        <span class="bg-green-600 text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                        <span class="font-medium">Set Status</span>
+                    </button>
+                    
+                    <button class="w-full p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg flex items-center">
+                        <span class="bg-yellow-600 text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-calendar-plus"></i>
+                        </span>
+                        <span class="font-medium">Add Event</span>
+                    </button>
+                    
+                    <button class="w-full p-3 bg-red-50 hover:bg-red-100 rounded-lg flex items-center">
+                        <span class="bg-red-600 text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-clock"></i>
+                        </span>
+                        <span class="font-medium">Set Deadlines</span>
+                    </button>
+                </div>
+                
+                <div class="pt-6 border-t border-gray-200 mt-6">
+                    <button onclick="closeModal('quickActionsModal')" class="w-full py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                        Done
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Semester Modal (similar structure to Add Semester) -->
+    <div id="editSemesterModal" class="modal-overlay">
+        <div class="modal-content">
+            <!-- Similar content to Add Semester Modal but with pre-filled data -->
+        </div>
+    </div>
+    
+    <!-- Bulk Actions Modal -->
+    <div id="bulkActionsModal" class="modal-overlay">
+        <div class="modal-content max-w-lg">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Bulk Semester Actions</h3>
+                    <button onclick="closeModal('bulkActionsModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Semesters</label>
+                    <div class="border border-gray-300 rounded-lg p-3 max-h-48 overflow-y-auto">
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                <label class="ml-2 text-sm text-gray-700">Fall 2023 (Current)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500" checked>
+                                <label class="ml-2 text-sm text-gray-700">Summer 2023</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500" checked>
+                                <label class="ml-2 text-sm text-gray-700">Winter 2023</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                <label class="ml-2 text-sm text-gray-700">Fall 2022</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Action</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                        <option>Select an action...</option>
+                        <option>Generate Reports</option>
+                        <option>Export Data</option>
+                        <option>Archive</option>
+                        <option>Change Status</option>
+                        <option>Merge Semester Data</option>
+                    </select>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="closeModal('bulkActionsModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                        Apply to Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filter Semesters Modal -->
+    <div id="filterSemestersModal" class="modal-overlay">
+        <div class="modal-content max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Filter Semesters</h3>
+                    <button onclick="closeModal('filterSemestersModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                            <option>All</option>
+                            <option>Completed</option>
+                            <option>In Progress</option>
+                            <option>Upcoming</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">From Year</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                                <option>2023</option>
+                                <option>2022</option>
+                                <option>2021</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">To Year</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                                <option>2024</option>
+                                <option>2023</option>
+                                <option>2022</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Term</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                            <option>All Terms</option>
+                            <option>Fall</option>
+                            <option>Winter</option>
+                            <option>Summer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="showArchived" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                        <label for="showArchived" class="ml-2 block text-sm text-gray-700">Include Archived Semesters</label>
+                    </div>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-end space-x-3 mt-6">
+                    <button onclick="closeModal('filterSemestersModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Reset
+                    </button>
+                    <button onclick="closeModal('filterSemestersModal')" class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Prepare Enrollment Modal -->
+    <div id="prepareEnrollmentModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Prepare Enrollment for Winter 2024</h3>
+                    <button onclick="closeModal('prepareEnrollmentModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="glass-card p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-700 mb-2">Enrollment Timeline</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Priority Enrollment</p>
+                                <p class="font-medium">Nov 15 - Nov 30, 2023</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">General Enrollment</p>
+                                <p class="font-medium">Dec 1 - Jan 5, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Late Enrollment</p>
+                                <p class="font-medium">Jan 6 - Jan 12, 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-700 mb-2">New Pricing</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Base Tuition:</span>
+                                <span class="font-medium">$110/credit (+10%)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Technology Fee:</span>
+                                <span class="font-medium">$50/student</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Early Bird Discount:</span>
+                                <span class="font-medium text-green-600">10% if enrolled by Dec 15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">Courses to Offer</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-gray-600 border-b">
+                                    <th class="pb-2">Select</th>
+                                    <th class="pb-2">Course Code</th>
+                                    <th class="pb-2">Course Name</th>
+                                    <th class="pb-2">Instructor</th>
+                                    <th class="pb-2">Capacity</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="py-2">
+                                        <input type="checkbox" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500" checked>
+                                    </td>
+                                    <td>CS101</td>
+                                    <td>Introduction to Computer Science</td>
+                                    <td>Dr. Smith</td>
+                                    <td>40</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2">
+                                        <input type="checkbox" class="h-4 w-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500" checked>
+                                    </td>
+                                    <td>MATH201</td>
+                                    <td>Linear Algebra</td>
+                                    <td>Prof. Johnson</td>
+                                    <td>35</td>
+                                </tr>
+                                <!-- More courses... -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-between mt-6">
+                    <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Save as Draft
+                    </button>
+                    <div class="space-x-3">
+                        <button onclick="closeModal('prepareEnrollmentModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                            Publish Enrollment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Reports Modal -->
+    <div id="viewReportsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Semester Reports: Summer 2023</h3>
+                    <button onclick="closeModal('viewReportsModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex flex-wrap gap-3">
+                        <button class="px-4 py-2 bg-pink-600 text-white rounded-md text-sm">
+                            Summary Report
+                        </button>
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50">
+                            Financial Report
+                        </button>
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50">
+                            Attendance Report
+                        </button>
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50">
+                            Performance Analysis
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-xl mb-6">
+                    <h4 class="font-bold text-lg mb-4">Semester Summary</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div>
+                            <h5 class="font-medium text-gray-700 mb-2">Key Metrics</h5>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Total Students:</span>
+                                    <span class="font-medium">1,120</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Classes Conducted:</span>
+                                    <span class="font-medium">42</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Avg. Attendance:</span>
+                                    <span class="font-medium">85.7%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-medium text-gray-700 mb-2">Financial Overview</h5>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Total Revenue:</span>
+                                    <span class="font-medium">$112,000</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Expenses:</span>
+                                    <span class="font-medium">$78,400</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Net Profit:</span>
+                                    <span class="font-medium text-green-600">$33,600</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-medium text-gray-700 mb-2">Performance Indicators</h5>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Avg. Grade:</span>
+                                    <span class="font-medium">82.5% (B)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Satisfaction Rate:</span>
+                                    <span class="font-medium">89.3%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Retention Rate:</span>
+                                    <span class="font-medium">92.8%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-medium text-gray-700 mb-2">Top Performing Courses</h5>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="text-left text-gray-600 border-b">
+                                        <th class="pb-2">Course</th>
+                                        <th class="pb-2">Instructor</th>
+                                        <th class="pb-2">Enrollment</th>
+                                        <th class="pb-2">Avg. Grade</th>
+                                        <th class="pb-2">Satisfaction</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr>
+                                        <td class="py-2">CS101</td>
+                                        <td class="py-2">Dr. Smith</td>
+                                        <td class="py-2">38/40</td>
+                                        <td class="py-2">88%</td>
+                                        <td class="py-2">94%</td>
+                                    </tr>
+                                    <!-- More courses... -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div class="text-sm text-gray-500">
+                        Last generated: Nov 15, 2023
+                    </div>
+                    <div class="space-x-3">
+                        <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            <i class="fas fa-download mr-2"></i> Export PDF
+                        </button>
+                        <button onclick="closeModal('viewReportsModal')" class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Configure Academic Year Modal -->
+    <div id="configureAcademicYearModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-xl text-pink-600">Configure Academic Year 2023/2024</h3>
+                    <button onclick="closeModal('configureAcademicYearModal')" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="glass-card p-4 rounded-lg border border-green-100">
+                            <h4 class="font-medium text-green-700 mb-2">Fall 2023</h4>
+                            <p class="text-sm text-gray-600">Sep 5 - Dec 20, 2023</p>
+                            <div class="mt-2 text-xs">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-4 rounded-lg border border-yellow-100">
+                            <h4 class="font-medium text-yellow-700 mb-2">Winter 2024</h4>
+                            <p class="text-sm text-gray-600">Jan 8 - Mar 29, 2024</p>
+                            <div class="mt-2 text-xs">
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Planning</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-medium text-gray-700 mb-2">Summer 2024</h4>
+                            <p class="text-sm text-gray-600">Jun 5 - Aug 25, 2024</p>
+                            <div class="mt-2 text-xs">
+                                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Draft</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Academic Year Name</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2023/2024">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fall Term</label>
+                            <div class="flex space-x-2">
+                                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2023-09-05">
+                                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2023-12-20">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Winter Term</label>
+                            <div class="flex space-x-2">
+                                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2024-01-08">
+                                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2024-03-29">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Summer Term</label>
+                            <div class="flex space-x-2">
+                                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2024-06-05">
+                                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" value="2024-08-25">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Year Description</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" rows="3">Standard academic year with three terms - Fall, Winter, and Summer.</textarea>
+                    </div>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 flex justify-between mt-6">
+                    <button onclick="openModal('deleteAcademicYearModal')" class="px-4 py-2 text-red-600 hover:text-red-700">
+                        Delete Academic Year
+                    </button>
+                    <div class="space-x-3">
+                        <button onclick="closeModal('configureAcademicYearModal')" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button class="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   <script src="main.js"></script>
+</body>
+</html>
