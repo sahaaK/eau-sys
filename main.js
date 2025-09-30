@@ -1,3 +1,109 @@
+// Modal open/close functions (global)
+window.openModal = function(modalId) {
+    var modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+window.closeModal = function(modalId) {
+    var modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+// Schedule row functions (global)
+window.addScheduleRow = function() {
+    const scheduleRows = document.getElementById('scheduleRows');
+    if (!scheduleRows) return;
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>
+            <select class="w-full px-2 py-1 border-none focus:ring-0">
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+            </select>
+        </td>
+        <td><input type="time" class="w-full px-2 py-1 border-none focus:ring-0" value="09:00"></td>
+        <td><input type="time" class="w-full px-2 py-1 border-none focus:ring-0" value="10:30"></td>
+        <td class="text-center">
+            <button type="button" class="text-red-400 hover:text-red-600 remove-schedule-btn">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    `;
+    scheduleRows.appendChild(newRow);
+    // Attach remove event
+    newRow.querySelector('.remove-schedule-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.removeScheduleRow(this);
+    });
+}
+window.removeScheduleRow = function(button) {
+    const row = button.closest('tr');
+    if (row) row.remove();
+}
+
+// Initialization for Classes tab after dynamic load
+function initClassesTab() {
+    // Modal open/close
+    document.querySelectorAll('[data-modal-open]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.openModal(this.getAttribute('data-modal-open'));
+        });
+    });
+    document.querySelectorAll('[data-modal-close]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.closeModal(this.getAttribute('data-modal-close'));
+        });
+    });
+    // Tab selector buttons
+    const tabButtons = document.querySelectorAll('.tab-selector button');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            tabButtons.forEach(btn => btn.classList.remove('active', 'text-primary'));
+            this.classList.add('active', 'text-primary');
+        });
+    });
+    // Add schedule row
+    const addScheduleBtn = document.querySelector('.add-schedule-btn');
+    if (addScheduleBtn) {
+        addScheduleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.addScheduleRow();
+        });
+    }
+    // Remove schedule row
+    document.querySelectorAll('.remove-schedule-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.removeScheduleRow(this);
+        });
+    });
+    // Add class form submission
+    const addClassForm = document.getElementById('addClassForm');
+    if (addClassForm) {
+        addClassForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Class created successfully!');
+            window.closeModal('addClassModal');
+        });
+    }
+    // Animate progress bars (if needed)
+    document.querySelectorAll('.progress-fill').forEach(fill => {
+        // Already set in style attribute
+    });
+}
    // Tab functionality
         function openTab(tabName) {
             // Hide all tab content
@@ -19,11 +125,12 @@
             event.currentTarget.classList.add('border-primary', 'text-primary');
             event.currentTarget.classList.remove('border-transparent', 'text-gray-600');
 
-               if (tabName === 'classes') {
+            if (tabName === 'classes') {
                 fetch('classes.html')
                     .then(res => res.text())
                     .then(html => {
                         document.getElementById('classes').innerHTML = html;
+                        if (typeof initClassesTab === 'function') initClassesTab();
                     });
             }
             if (tabName === 'students') {
